@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FlightsScheduleDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="flights">
+          <Key>
+            <PropertyRef Name="flight_id" />
+          </Key>
+          <Property Name="flight_id" Type="int" Nullable="false" />
+          <Property Name="route_id" Type="int" Nullable="false" />
+          <Property Name="departure_time" Type="datetime" Nullable="false" />
+          <Property Name="arrival_time" Type="datetime" Nullable="false" />
+          <Property Name="airline_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="routes">
+          <Key>
+            <PropertyRef Name="route_id" />
+          </Key>
+          <Property Name="route_id" Type="int" Nullable="false" />
+          <Property Name="origin_city_id" Type="int" Nullable="false" />
+          <Property Name="destination_city_id" Type="int" Nullable="false" />
+          <Property Name="departure_date" Type="date" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FlightsScheduleDB.dbo.subscriptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="subscriptions">
+          <Key>
+            <PropertyRef Name="agency_id" />
+            <PropertyRef Name="origin_city_id" />
+            <PropertyRef Name="destination_city_id" />
+          </Key>
+          <Property Name="agency_id" Type="int" Nullable="false" />
+          <Property Name="origin_city_id" Type="int" Nullable="false" />
+          <Property Name="destination_city_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_flights_routes">
+          <End Role="routes" Type="Self.routes" Multiplicity="1" />
+          <End Role="flights" Type="Self.flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="routes">
+              <PropertyRef Name="route_id" />
+            </Principal>
+            <Dependent Role="flights">
+              <PropertyRef Name="route_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FlightsScheduleDBModelStoreContainer">
+          <EntitySet Name="flights" EntityType="Self.flights" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="routes" EntityType="Self.routes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="subscriptions" EntityType="Self.subscriptions" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [subscriptions].[agency_id] AS [agency_id], 
+    [subscriptions].[origin_city_id] AS [origin_city_id], 
+    [subscriptions].[destination_city_id] AS [destination_city_id]
+    FROM [dbo].[subscriptions] AS [subscriptions]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_flights_routes" Association="Self.FK_flights_routes">
+            <End Role="routes" EntitySet="routes" />
+            <End Role="flights" EntitySet="flights" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FlightsScheduleDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="flight">
+          <Key>
+            <PropertyRef Name="flight_id" />
+          </Key>
+          <Property Name="flight_id" Type="Int32" Nullable="false" />
+          <Property Name="route_id" Type="Int32" Nullable="false" />
+          <Property Name="departure_time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="arrival_time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="airline_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="route" Relationship="Self.FK_flights_routes" FromRole="flights" ToRole="routes" />
+        </EntityType>
+        <EntityType Name="route">
+          <Key>
+            <PropertyRef Name="route_id" />
+          </Key>
+          <Property Name="route_id" Type="Int32" Nullable="false" />
+          <Property Name="origin_city_id" Type="Int32" Nullable="false" />
+          <Property Name="destination_city_id" Type="Int32" Nullable="false" />
+          <Property Name="departure_date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="flights" Relationship="Self.FK_flights_routes" FromRole="routes" ToRole="flights" />
+        </EntityType>
+        <EntityType Name="subscription">
+          <Key>
+            <PropertyRef Name="agency_id" />
+            <PropertyRef Name="origin_city_id" />
+            <PropertyRef Name="destination_city_id" />
+          </Key>
+          <Property Name="agency_id" Type="Int32" Nullable="false" />
+          <Property Name="origin_city_id" Type="Int32" Nullable="false" />
+          <Property Name="destination_city_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_flights_routes">
+          <End Role="routes" Type="Self.route" Multiplicity="1" />
+          <End Role="flights" Type="Self.flight" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="routes">
+              <PropertyRef Name="route_id" />
+            </Principal>
+            <Dependent Role="flights">
+              <PropertyRef Name="route_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FlightsScheduleDBContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="flights" EntityType="Self.flight" />
+          <EntitySet Name="routes" EntityType="Self.route" />
+          <EntitySet Name="subscriptions" EntityType="Self.subscription" />
+          <AssociationSet Name="FK_flights_routes" Association="Self.FK_flights_routes">
+            <End Role="routes" EntitySet="routes" />
+            <End Role="flights" EntitySet="flights" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FlightsScheduleDBModelStoreContainer" CdmEntityContainer="FlightsScheduleDBContext">
+          <EntitySetMapping Name="flights">
+            <EntityTypeMapping TypeName="FlightsScheduleDBModel.flight">
+              <MappingFragment StoreEntitySet="flights">
+                <ScalarProperty Name="flight_id" ColumnName="flight_id" />
+                <ScalarProperty Name="route_id" ColumnName="route_id" />
+                <ScalarProperty Name="departure_time" ColumnName="departure_time" />
+                <ScalarProperty Name="arrival_time" ColumnName="arrival_time" />
+                <ScalarProperty Name="airline_id" ColumnName="airline_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="routes">
+            <EntityTypeMapping TypeName="FlightsScheduleDBModel.route">
+              <MappingFragment StoreEntitySet="routes">
+                <ScalarProperty Name="route_id" ColumnName="route_id" />
+                <ScalarProperty Name="origin_city_id" ColumnName="origin_city_id" />
+                <ScalarProperty Name="destination_city_id" ColumnName="destination_city_id" />
+                <ScalarProperty Name="departure_date" ColumnName="departure_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="subscriptions">
+            <EntityTypeMapping TypeName="FlightsScheduleDBModel.subscription">
+              <MappingFragment StoreEntitySet="subscriptions">
+                <ScalarProperty Name="agency_id" ColumnName="agency_id" />
+                <ScalarProperty Name="origin_city_id" ColumnName="origin_city_id" />
+                <ScalarProperty Name="destination_city_id" ColumnName="destination_city_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
