@@ -8,5 +8,6 @@ namespace FlightScheduleDetection.Domain.Constants
         public const int NoOfDaysToSubtract = -7;
         public const int MinuteToAdd = 30;
         public const int MinutesToSubtract = -30;
+        public const string csvReportPath = @"C:\CSVReports";
     }
 }
