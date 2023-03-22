@@ -9,7 +9,7 @@ namespace FlightScheduleDetection.UI.ClientValidation
     {
         internal static List<string> vailidationErrors = new List<string>();
 
-        public abstract void validate(params object[] values);
+        public abstract void Validate(params object[] values);
 
         internal static bool IsValidDate(string inputDate, out DateTime date)
         {          
@@ -22,7 +22,6 @@ namespace FlightScheduleDetection.UI.ClientValidation
         }
         internal static void CaptureValidationErrors(string message)
         {
-            Console.WriteLine(message);
             Log.Warning(message);
             vailidationErrors.Add(message);
         }

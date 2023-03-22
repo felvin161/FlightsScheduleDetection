@@ -9,7 +9,7 @@ namespace FlightScheduleDetection.Domain.Validations
 {
     public class GetScheduledFlightChangesServerValidator : ValidationBase
     {
-        public override void validate(params object[] values)
+        public override void Validate(params object[] values)
         {
 
             if (!IsValidDate(values[0].ToString(), out DateTime startDate))

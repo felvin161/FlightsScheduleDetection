@@ -6,7 +6,7 @@ namespace FlightScheduleDetection.Domain.Validations
 {
     public abstract class ValidationBase : IDisposable
     {
-        public abstract void validate(params object[] values);
+        public abstract void Validate(params object[] values);
         public void Dispose() { }
 
         internal static bool IsValidDate(string inputDate, out DateTime date)

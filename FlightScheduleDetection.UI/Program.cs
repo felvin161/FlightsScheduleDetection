@@ -20,7 +20,6 @@ namespace FlightScheduleDetection.UI
 
             Console.WriteLine("Application started\n");
 
-            //app.Run("2017-12-01", "2017-12-31", 1);
             if (args.Length == 3)
             {
                 app.Run(args[0], args[1], args[2]);

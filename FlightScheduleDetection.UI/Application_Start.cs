@@ -21,10 +21,10 @@ namespace FlightScheduleDetection.UI
             {
                 using (var validator = new ApplicaiionRunClientValidator())
                 {
-                    validator.validate(values);
+                    validator.Validate(values);
                 }
                 
-                _flightService.GetScheduledFlightChanges(DateTime.Parse(values[0].ToString()), DateTime.Parse(values[1].ToString()), (int)values[2]);
+                _flightService.GetScheduledFlightChanges(DateTime.Parse(values[0].ToString()), DateTime.Parse(values[1].ToString()), int.Parse(values[2].ToString()));
 
             }
             catch (Exception ex)

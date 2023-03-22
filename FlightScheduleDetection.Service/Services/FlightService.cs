@@ -25,7 +25,7 @@ namespace FlightScheduleDetection.Service.Services
 
                 using (var validator = new GetScheduledFlightChangesServerValidator())
                 {
-                    validator.validate(startDate, endDate, agencyID);
+                    validator.Validate(startDate, endDate, agencyID);
                 }
 
                 var flightsDetails = _flightsScheduleService.GetScheduledFlightChanges(startDate, endDate, agencyID);
@@ -43,8 +43,8 @@ namespace FlightScheduleDetection.Service.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error from GetScheduledFlightChanges");
-                Log.Error($"Error from GetScheduledFlightChanges . {ex} ");
+                Console.WriteLine("Something went wrong. Please check log file for more information.");
+                Log.Error($"Error from GetScheduledFlightChanges. {ex}");
                 throw ex;
             }
         }

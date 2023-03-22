@@ -12,11 +12,11 @@ namespace FlightScheduleDetection.Service.Services
 {
     public class CsvReportService : IReportService
     {
-        private static string csvReportPath = @"C:\CSVReports";
+        private const string csvReportPath = @"C:\CSVReports";
         public void GenerateReport(List<FlightDetailsModel> flightDetails)
         {
             Log.Information("Generating CSV Reports");
-            Console.WriteLine("Generating CSV Reports");
+            Console.WriteLine("Generating CSV Reports........");
 
             var csvPath = Path.Combine(csvReportPath, $"FlightSchedule-{DateTime.Now.ToFileTime()}.csv");
 
@@ -28,8 +28,8 @@ namespace FlightScheduleDetection.Service.Services
                 }
             }
 
-            Log.Information("CSV Reports Generated");
-            Console.WriteLine("CSV Reports Generated");
+            Log.Information("CSV Reports Generated.");
+            Console.WriteLine("CSV Reports Generated.");
         }
     }
 }

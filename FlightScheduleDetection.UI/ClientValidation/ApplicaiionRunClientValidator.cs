@@ -1,11 +1,12 @@
 ﻿
 using System;
+using System.Text;
 
 namespace FlightScheduleDetection.UI.ClientValidation
 {
     internal class ApplicaiionRunClientValidator : ClientValidator
     {
-        public override void validate(params object[] values)
+        public override void Validate(params object[] values)
         {
             if (!IsValidDate(values[0].ToString(), out DateTime startDate))
             {
@@ -26,6 +27,10 @@ namespace FlightScheduleDetection.UI.ClientValidation
 
             if (vailidationErrors.Count != 0)
             {
+                var sbError = new StringBuilder();
+                vailidationErrors.ForEach(e => sbError.AppendFormat("{0}\n", e));
+                Console.WriteLine(sbError);
+
                 vailidationErrors.Clear();
                 throw new ArgumentException("Invalid Inputs");        
             }

@@ -25,13 +25,13 @@ namespace FlightScheduleDetection.DataAccess
 
                 var scheduledFlights = GetFlightsDetailsForPeriod(db, startDate, EndDate, agencyID);
                 
-                var historyOfScheduledFlights = GetFlightsDetailsForPeriod(db, startDate.AddDays(Constants.NoOfDaysToSubtract), EndDate.AddDays(Constants.NoOfDaysToSubtract), agencyID);
+                var historyOfScheduledFlights = GetFlightsDetailsForPeriod(db, startDate.AddDays(Settings.NoOfDaysToSubtract), EndDate.AddDays(Settings.NoOfDaysToSubtract), agencyID);
                 
-                var scheduledFlightsForFuture = GetFlightsDetailsForPeriod(db, startDate.AddDays(Constants.NoOfDaysToAdd), EndDate.AddDays(Constants.NoOfDaysToAdd), agencyID);
+                var scheduledFlightsForFuture = GetFlightsDetailsForPeriod(db, startDate.AddDays(Settings.NoOfDaysToAdd), EndDate.AddDays(Settings.NoOfDaysToAdd), agencyID);
 
                 var newFlights = (from f in scheduledFlights
                                   join s in historyOfScheduledFlights on
-                                  new { f.OriginCityID, f.DestinationCityID, f.AirlineID, adte = (DateTime)DbFunctions.AddDays(f.DepartureTime, Constants.NoOfDaysToSubtract) } equals
+                                  new { f.OriginCityID, f.DestinationCityID, f.AirlineID, adte = (DateTime)DbFunctions.AddDays(f.DepartureTime, Settings.NoOfDaysToSubtract) } equals
                                   new { s.OriginCityID, s.DestinationCityID, s.AirlineID, adte = s.DepartureTime } into result
                                   from r in result.DefaultIfEmpty()
                                   where r == null
@@ -52,7 +52,7 @@ namespace FlightScheduleDetection.DataAccess
  
                 var discontinuedFlights = (from f in scheduledFlights
                                            join s in scheduledFlightsForFuture on
-                                           new { f.OriginCityID, f.DestinationCityID, f.AirlineID, adte = (DateTime)DbFunctions.AddDays(f.DepartureTime, Constants.NoOfDaysToAdd) } equals
+                                           new { f.OriginCityID, f.DestinationCityID, f.AirlineID, adte = (DateTime)DbFunctions.AddDays(f.DepartureTime, Settings.NoOfDaysToAdd) } equals
                                            new { s.OriginCityID, s.DestinationCityID, s.AirlineID, adte = s.DepartureTime } into result
                                            from r in result.DefaultIfEmpty()
                                            where r == null
@@ -74,7 +74,7 @@ namespace FlightScheduleDetection.DataAccess
 
                 watch.Stop();
                 TimeSpan timeTaken = watch.Elapsed;
-                Console.WriteLine($"Time taken to complete the flight detection algorithm is {timeTaken.ToString()}");
+                Console.WriteLine($"Time taken to complete the flight detection algorithm is {timeTaken}");
                 return flights;
             }
         }
