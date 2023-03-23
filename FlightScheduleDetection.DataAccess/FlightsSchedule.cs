@@ -49,7 +49,12 @@ namespace FlightScheduleDetection.DataAccess
                                       Status = FlightStatusType.New 
                                   }).ToList();
 
- 
+                //var newFlights = (from s in scheduledFlights
+                //                where !historyOfScheduledFlights.Any(h => s.OriginCityID == h.OriginCityID && s.DestinationCityID == h.DestinationCityID
+                //                && s.AirlineID == h.AirlineID && (DbFunctions.AddDays(s.DepartureTime, Settings.NoOfDaysToSubtract) >= DbFunctions.AddMinutes(h.DepartureTime, Settings.MinutesToSubtract)
+                //                && DbFunctions.AddDays(s.DepartureTime, Settings.NoOfDaysToSubtract) <= DbFunctions.AddMinutes(h.DepartureTime, Settings.MinuteToAdd)))
+                //                select s).ToList();
+
                 var discontinuedFlights = (from f in scheduledFlights
                                            join s in scheduledFlightsForFuture on
                                            new { f.OriginCityID, f.DestinationCityID, f.AirlineID, adte = (DateTime)DbFunctions.AddDays(f.DepartureTime, Settings.NoOfDaysToAdd) } equals
